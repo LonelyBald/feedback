@@ -1,27 +1,67 @@
 import InputMask from "react-input-mask";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeedback } from "../redux";
 export const Feedback = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [inputName, setInputName] = useState("");
   const [inputMessage, setInputMessage] = useState("");
+  const [phoneNumberDirty, setPhoneNumberDirty] = useState(false);
+  const [inputNameDirty, setInputNameDirty] = useState(false);
+  const [inputMessageDirty, setInputMessageDirty] = useState(false);
+  const [phoneNumberError, setPhoneNumberError] = useState(
+    "Phone number can't be empty"
+  );
+  const [inputNameError, setInputNameError] = useState(
+    "Name field  can't be empty"
+  );
+  const [inputMessageError, setInputMessageError] = useState(
+    "Message field  can't be empty"
+  );
+  const [formValid, setFormValid] = useState(false);
+
+  useEffect(() => {
+    if (inputMessageError || inputNameError || phoneNumberError) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  }, [inputMessageError, phoneNumberError, inputNameError]);
 
   const subscriber = useSelector((state) => state.feedback.feedbackData);
   const dispatch = useDispatch();
 
+  const result = /^[a-zA-Z ]+$/;
+
   const onChangeName = (event) => {
     setInputName(event.target.value);
+
+    if (!result.test(event.target.value)) {
+      setInputNameError("Incorrect name");
+    } else {
+      setInputNameError("");
+    }
   };
   const onChangePhoneNumber = (event) => {
     setPhoneNumber(event.target.value);
+    if (event.target.value) {
+      setPhoneNumberError("");
+    } else {
+      setPhoneNumberError("Phone number can't be empty");
+    }
   };
 
   const onChangeMessage = (event) => {
     setInputMessage(event.target.value);
+    const re = /^[a-zA-Z0-9!@\s\.,\?\$%\^\&*\)\(.]{6,}$/g;
+    if (!re.test(event.target.value)) {
+      setInputMessageError("Incorrect message");
+    } else {
+      setInputMessageError("");
+    }
   };
   const sendFeedback = () => {
-    if (inputName && phoneNumber) {
+    if (inputName && phoneNumber && inputMessage) {
       dispatch(
         addFeedback({
           name: inputName,
@@ -38,39 +78,69 @@ export const Feedback = () => {
     setPhoneNumber("");
   };
 
+  const blurHandler = (e) => {
+    switch (e.target.className) {
+      case "input-name":
+        setInputNameDirty(true);
+        break;
+      case "input-phone":
+        setPhoneNumberDirty(true);
+        break;
+      case "text-message":
+        setInputMessageDirty(true);
+        break;
+    }
+  };
+
   return (
     <div className="fb-container">
       <span>
         Name <span className="required-filed">*</span>
       </span>
+      {inputNameDirty && inputNameError && (
+        <div style={{ color: "red" }}>{inputNameError}</div>
+      )}
       <input
         className="input-name"
         type="text"
         value={inputName}
-        onChange={onChangeName}
+        onBlur={(e) => blurHandler(e)}
+        onChange={(e) => onChangeName(e)}
         placeholder="Enter your name..."
       />
       <span>
         Phone number <span className="required-filed">*</span>
       </span>
+      {phoneNumberDirty && phoneNumberError && (
+        <div style={{ color: "red" }}>{phoneNumberError}</div>
+      )}
       <InputMask
         className="input-phone"
-        mask="+7 (999) 999-99-99"
-        placeholder="+7 (999) 999-99-99"
+        onBlur={(e) => blurHandler(e)}
+        mask="+7(999) 999-99-99"
+        placeholder="+7(999) 999-99-99"
         value={phoneNumber}
-        onChange={onChangePhoneNumber}
+        onChange={(e) => onChangePhoneNumber(e)}
       ></InputMask>
       <span>
         Message <span className="required-filed">*</span>
       </span>
+      {inputMessageDirty && inputMessageError && (
+        <div style={{ color: "red" }}>{inputMessageError}</div>
+      )}
       <textarea
         className="text-message"
+        onBlur={(e) => blurHandler(e)}
         name="comments"
         value={inputMessage}
-        onChange={onChangeMessage}
+        onChange={(e) => onChangeMessage(e)}
         placeholder="Enter message..."
       />
-      <button className="send-button" onClick={sendFeedback}>
+      <button
+        disabled={!formValid}
+        className="send-button"
+        onClick={sendFeedback}
+      >
         SEND FEEDBACK
       </button>
       {subscriber
