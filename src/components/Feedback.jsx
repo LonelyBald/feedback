@@ -29,7 +29,6 @@ export const Feedback = () => {
   }, [inputMessageError, phoneNumberError, inputNameError]);
 
   const dispatch = useDispatch();
-
   const result = /^[a-zA-Z ]+$/;
 
   const onChangeName = (event) => {
@@ -76,7 +75,6 @@ export const Feedback = () => {
     setInputMessage("");
     setPhoneNumber("");
   };
-
   const blurHandler = (e) => {
     switch (e.target.className) {
       case "input-name":

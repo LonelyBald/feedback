@@ -13,15 +13,6 @@ export const feedbackSlice = createSlice({
     addFeedback: (state, action) => {
       state.feedbackData.push(action.payload);
     },
-    // removeTodo: (state, action) =>
-    //   void (state.todos = state.todos.filter(
-    //     ({ id }) => id !== action.payload.id
-    //   )),
-    // setToggleCheckBox: (state, action) => {
-    //   if (action.payload.toggleCheckBox === false) {
-    //     return true;
-    //   }
-    // },
   },
 });
 export const { addFeedback } = feedbackSlice.actions;
