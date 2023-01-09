@@ -1,6 +1,6 @@
 import InputMask from "react-input-mask";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addFeedback } from "../redux";
 export const Feedback = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -28,7 +28,6 @@ export const Feedback = () => {
     }
   }, [inputMessageError, phoneNumberError, inputNameError]);
 
-  const subscriber = useSelector((state) => state.feedback.feedbackData);
   const dispatch = useDispatch();
 
   const result = /^[a-zA-Z ]+$/;
@@ -53,7 +52,7 @@ export const Feedback = () => {
 
   const onChangeMessage = (event) => {
     setInputMessage(event.target.value);
-    const re = /^[a-zA-Z0-9!@\s\.,\?\$%\^\&*\)\(.]{6,}$/g;
+    const re = /^[a-zA-Z0-9!@\s.'",?$%^&*)(]{6,}$/g;
     if (!re.test(event.target.value)) {
       setInputMessageError("Incorrect message");
     } else {
@@ -143,15 +142,6 @@ export const Feedback = () => {
       >
         SEND FEEDBACK
       </button>
-      {subscriber
-        ? subscriber.map((sub, index) => (
-            <div key={index}>
-              <span>{sub.name}</span>
-              <span>{sub.phone}</span>
-              <span>{sub.message}</span>
-            </div>
-          ))
-        : null}
     </div>
   );
 };
