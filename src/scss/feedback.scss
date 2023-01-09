@@ -1,0 +1,41 @@
+.fb-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border: 2px solid grey;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.input-name {
+  margin-bottom: 8px;
+  height: 40px;
+  font-size: 15px;
+}
+.input-phone {
+  margin-bottom: 8px;
+  height: 40px;
+  font-size: 15px;
+}
+.text-message {
+  font-size: 15px;
+  margin-bottom: 16px;
+  min-height: 300px;
+  max-height: 300px;
+  min-width: 98%;
+  max-width: 98%;
+}
+.send-button {
+  margin-bottom: 8px;
+  height: 40px;
+  width: 50%;
+  margin-left: 25%;
+  color: white;
+  background-color: blue;
+  border: none;
+  border-radius: 8px;
+}
+.required-filed {
+  color: red;
+}
+
